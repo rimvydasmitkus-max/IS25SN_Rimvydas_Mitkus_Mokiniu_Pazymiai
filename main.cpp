@@ -18,7 +18,8 @@ int main() {
         cout << "2. Rodyti visus mokinius\n";
         cout << "3. Rodyti vieno mokinio pazymius\n";
         cout << "4. Atnaujinti pazymi\n";
-        cout << "5. Baigti darba\n";
+        cout << "5. Pasalinti mokini\n";
+        cout << "6. Baigti darba\n";
         cout << "Pasirinkite: ";
         cin >> pasirinkimas;
 
@@ -33,16 +34,16 @@ int main() {
                 cin >> ws;
                 getline(cin, vardai[mokiniuKiekis]);
 
-                cout << "Kiek pazymiu turi mokinys? ";
-                cin >> pazymiuKiekis[mokiniuKiekis];
-
-                if (pazymiuKiekis[mokiniuKiekis] > MAX_PAZYMIU) {
-                    pazymiuKiekis[mokiniuKiekis] = MAX_PAZYMIU;
-                }
+                do {
+                    cout << "Kiek pazymiu turi mokinys? (1-10): ";
+                    cin >> pazymiuKiekis[mokiniuKiekis];
+                } while (pazymiuKiekis[mokiniuKiekis] < 1 || pazymiuKiekis[mokiniuKiekis] > MAX_PAZYMIU);
 
                 for (int j = 0; j < pazymiuKiekis[mokiniuKiekis]; j++) {
-                    cout << "Iveskite " << j + 1 << " pazymi: ";
-                    cin >> pazymiai[mokiniuKiekis][j];
+                    do {
+                        cout << "Iveskite " << j + 1 << " pazymi (1-10): ";
+                        cin >> pazymiai[mokiniuKiekis][j];
+                    } while (pazymiai[mokiniuKiekis][j] < 1 || pazymiai[mokiniuKiekis][j] > 10);
                 }
 
                 mokiniuKiekis++;
@@ -122,15 +123,48 @@ int main() {
                     break;
                 }
 
-                cout << "Iveskite nauja pazymi: ";
-                cin >> naujas;
+                do {
+                    cout << "Iveskite nauja pazymi (1-10): ";
+                    cin >> naujas;
+                } while (naujas < 1 || naujas > 10);
 
                 pazymiai[i][pazNr - 1] = naujas;
                 cout << "Pazymys atnaujintas.\n";
                 break;
             }
 
-            case 5:
+            case 5: {
+                if (mokiniuKiekis == 0) {
+                    cout << "Mokiniu sarasas tuscias.\n";
+                    break;
+                }
+
+                int nr;
+                cout << "Iveskite mokinio numeri, kuri norite pasalinti: ";
+                cin >> nr;
+
+                if (nr < 1 || nr > mokiniuKiekis) {
+                    cout << "Tokio mokinio nera.\n";
+                    break;
+                }
+
+                int i = nr - 1;
+
+                for (int j = i; j < mokiniuKiekis - 1; j++) {
+                    vardai[j] = vardai[j + 1];
+                    pazymiuKiekis[j] = pazymiuKiekis[j + 1];
+
+                    for (int k = 0; k < MAX_PAZYMIU; k++) {
+                        pazymiai[j][k] = pazymiai[j + 1][k];
+                    }
+                }
+
+                mokiniuKiekis--;
+                cout << "Mokinys pasalintas.\n";
+                break;
+            }
+
+            case 6:
                 cout << "Programa baigta.\n";
                 break;
 
@@ -138,7 +172,7 @@ int main() {
                 cout << "Neteisingas pasirinkimas.\n";
         }
 
-    } while (pasirinkimas != 5);
+    } while (pasirinkimas != 6);
 
     return 0;
 }
